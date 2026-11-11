@@ -1,0 +1,59 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "FreeRemoteDesk",
+  "version": "0.3.0",
+  "identifier": "com.freeremotedesk.agent",
+  "build": {
+    "beforeDevCommand": "pnpm dev",
+    "devUrl": "http://127.0.0.1:1420",
+    "beforeBuildCommand": "pnpm build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "FreeRemoteDesk",
+        "width": 480,
+        "height": 640,
+        "resizable": true,
+        "fullscreen": false,
+        "minWidth": 400,
+        "minHeight": 500
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self' ipc: http://ipc.localhost; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; media-src 'self' blob: mediastream:; connect-src 'self' ipc: http://ipc.localhost http: https: ws: wss: stun: stuns:"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["msi", "nsis", "app", "dmg", "deb", "rpm", "appimage"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "copyright": "Copyright © 2026 FreeRemoteDesk contributors",
+    "category": "Utility",
+    "shortDescription": "Reach your home dev machine from any device",
+    "longDescription": "FreeRemoteDesk is a browser-first, self-hosted remote desktop. Install this agent on the machine you want to reach; deploy the PWA + signaling to your own free-tier Cloudflare and Vercel accounts; connect from any browser at zero monthly cost.",
+    "publisher": "FreeRemoteDesk contributors",
+    "homepage": "https://github.com/Teylersf/freeremotedesk",
+    "windows": {
+      "webviewInstallMode": {
+        "type": "embedBootstrapper"
+      },
+      "wix": {
+        "language": ["en-US"]
+      }
+    },
+    "linux": {
+      "deb": {
+        "depends": ["libwebkit2gtk-4.1-0", "libgtk-3-0"]
+      }
+    }
+  }
+}

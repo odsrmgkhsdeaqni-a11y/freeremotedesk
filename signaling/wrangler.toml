@@ -1,0 +1,42 @@
+name = "freeremotedesk-signaling"
+main = "src/index.ts"
+compatibility_date = "2025-01-01"
+
+# --------------------------------------------------------------------
+# FreeRemoteDesk is BYO-infra: this Worker is deployed by each end user
+# to their own Cloudflare account. Free tier easily covers signaling
+# for a personal instance (100k requests/day).
+#
+# Deploy:
+#     wrangler login
+#     wrangler deploy
+#
+# That's it. No secrets, no D1, no rate limit binding required for MVP.
+# --------------------------------------------------------------------
+
+# Durable Object: one instance per pairing code / active session, relays
+# messages between two WebSocket peers. Auto-evicted when both peers leave.
+[[durable_objects.bindings]]
+name = "SESSION"
+class_name = "SessionRoom"
+
+# Cloudflare's free plan requires Durable Objects to be backed by SQLite,
+# which means the migration must be `new_sqlite_classes`, not the older
+# `new_classes`. Paid Workers plans accept either.
+[[migrations]]
+tag = "v1"
+new_sqlite_classes = ["SessionRoom"]
+
+# Uncomment when you get to Phase 3 (WebAuthn) — needs a D1 database:
+#   wrangler d1 create freeremotedesk-auth
+# then paste the returned database_id below.
+#
+# [[d1_databases]]
+# binding = "AUTH_DB"
+# database_name = "freeremotedesk-auth"
+# database_id = "PASTE_ID_HERE"
+
+# Optional: allow only your own PWA origin(s) to talk to signaling.
+# Comma-separated. Leave unset to allow any origin (fine for personal use).
+[vars]
+ALLOWED_ORIGINS = ""
